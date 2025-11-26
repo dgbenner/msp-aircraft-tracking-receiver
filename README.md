@@ -45,12 +45,7 @@ This project involves building your own ADS-B (Automatic Dependent Surveillance-
 - South-facing windows ideal (Northern Hemisphere - most traffic routes)
 - Magnetic base antennas work well on metal surfaces (filing cabinets, shelves)
 
-### Outdoor Setup
-- Roof mounting gives best results
-- Clear line of sight to sky
-- Away from metal objects and obstructions
-- Height matters - higher is better
-- Use USB extension cable if needed (max 15ft without active amplifier)
+
 
 ## Software Options
 
