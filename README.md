@@ -1,4 +1,4 @@
-# MSP Aircraft Tracking
+# MSP Aircraft Tracking Receiver
 
 A DIY ADS-B receiver project for tracking aircraft in the Minneapolis area.
 
