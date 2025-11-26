@@ -1,191 +1,193 @@
-# RealADSB on Apple TV
+# MSP Aircraft Tracking
 
-A guide to setting up aircraft tracking on Apple TV using the RealADSB app.
+A DIY ADS-B receiver project for tracking aircraft in the Minneapolis area.
 
 ## Overview
 
-RealADSB is an aircraft tracking application that displays real-time ADS-B (Automatic Dependent Surveillance-Broadcast) data from nearby aircraft. Similar to FlightRadar24, but designed to work with your own receiver or public feeds.
+This project involves building your own ADS-B (Automatic Dependent Surveillance-Broadcast) receiver to track aircraft in real-time. Aircraft broadcast their position, altitude, speed, and other data on 1090 MHz, which you can receive directly with inexpensive hardware.
 
-The app shows:
-- Commercial, private, and military aircraft
-- Altitude, speed, heading, callsign
-- Aircraft registration, type, origin/destination
-- Map view with airport overlays and weather radar
+**What you'll see:**
+- Commercial, private, and military aircraft within 100-250 miles
+- Real-time position, altitude, speed, heading, callsign
+- Aircraft registration, type, origin/destination information
+- Typical range: 100-250 miles line-of-sight
 
-## Connection Options
+## Hardware Required
 
-RealADSB requires a data source. You have three options:
+### Basic Setup (~$75-85)
 
-### 1. Public Feeds (Easiest - No Hardware)
-
-The app mentions three public feeds, though connection details aren't publicly advertised:
-- **KEWR** - Newark Liberty International Airport area
-- **EGCN** - United Kingdom coverage
-- **EDDC** - Germany coverage
-
-**To access:** Check the app's built-in "Public Feeds" or "Connections" settings. The developer may provide access details via email: admin@realadsb.com
-
-### 2. Airplanes.live API (No Hardware)
-
-Starting with version 2.12, RealADSB integrated with Airplanes.live API for global coverage without requiring your own receiver. This should be available as a built-in option in the app settings.
-
-### 3. Your Own ADS-B Receiver (Best Coverage)
-
-Build your own receiver for comprehensive local coverage (100-250 mile radius).
-
-## Building Your Own Receiver
-
-### Hardware Required
-
-**Basic Setup (~$50-80):**
-- Raspberry Pi (any model with USB, Pi Zero W works)
-- MicroSD card (16GB minimum)
-- RTL-SDR USB dongle (~$25-35)
+- **Raspberry Pi Zero W**: ~$15 (any Pi model with USB works)
+- **RTL-SDR USB dongle**: ~$30
   - RTL-SDR Blog V3 (recommended)
   - NooElec NESDR Smart
   - FlightAware Pro Stick
-- ADS-B antenna (1090 MHz)
-  - Commercial antenna (~$20-40), or
+- **ADS-B antenna (1090 MHz)**: ~$20-25
+  - Commercial magnetic mount antenna, or
   - DIY cantenna/spider antenna (nearly free)
-- Power supply for Raspberry Pi
-- (Optional) Weatherproof enclosure if mounting outdoors
+- **MicroSD card**: ~$8 (16GB minimum)
+- **USB power supply**: ~$8 (or use existing phone charger)
 
-**Recommended Upgrades:**
+**Total: ~$75-85**
+
+### Optional Upgrades
+
 - LNA (Low Noise Amplifier) for better range
-- Quality coaxial cable if antenna is remote
+- Quality coaxial cable if antenna is remote mounted
 - Bandpass filter to reduce interference
+- Weatherproof enclosure for outdoor mounting
 
-### Software Options
+## Antenna Placement
 
-Several pre-configured images available:
+### Indoor Setup
+- Near a window (upper floors work best)
+- Away from electronics and USB chargers (minimize interference)
+- Vertical orientation preferred
+- South-facing windows ideal (Northern Hemisphere - most traffic routes)
+- Magnetic base antennas work well on metal surfaces (filing cabinets, shelves)
 
-1. **PiAware** (FlightAware)
-   - Most popular, well-documented
-   - Includes dump1090 (provides data on port 30005)
-   - Web interface at `http://[pi-ip]/`
-
-2. **Stratux**
-   - Originally for pilots/EFB apps
-   - Provides SBS-1 format on port 30003
-   - Web UI at `http://192.168.10.1`
-
-3. **ADSBexchange**
-   - Community-focused
-   - Good for supporting open data
-
-4. **Standalone dump1090**
-   - Minimal setup
-   - Just the decoder, no extras
-
-### Basic Setup Steps
-
-1. Flash SD card with chosen image (use Etcher or Raspberry Pi Imager)
-2. Boot Raspberry Pi with RTL-SDR dongle and antenna connected
-3. Find Pi's IP address (check your router or use network scanner)
-4. Verify data feed:
-   - PiAware: `http://[pi-ip]:8080` 
-   - Stratux: `http://192.168.10.1`
-5. In RealADSB app, enter: `[pi-ip]:30005` (Beast format) or `[pi-ip]:30003` (SBS-1 format)
-
-## Using adsb_hub3 (Optional)
-
-For advanced users, adsb_hub3 is a Java application that:
-- Aggregates multiple data sources
-- Filters and compresses data for mobile devices
-- Supports Bonjour auto-discovery on local network
-- Enables API integrations (OpenSky, ADS-B Exchange)
-
-Download from: http://www.realadsb.com
-
-## Connection Format
-
-When entering connection details in RealADSB:
-
-**Local receiver:**
-```
-192.168.1.100:30005
-```
-
-**With airport ICAO code:**
-```
-192.168.1.100:4567:KEWR
-```
-(Sets reference location to Newark airport)
-
-## Antenna Placement Tips
-
-- Height matters - roof mounting gives best results
+### Outdoor Setup
+- Roof mounting gives best results
 - Clear line of sight to sky
-- Away from metal objects and electronics
-- South-facing in Northern Hemisphere (most traffic)
-- USB extension cable if needed (max 15ft without active extension)
+- Away from metal objects and obstructions
+- Height matters - higher is better
+- Use USB extension cable if needed (max 15ft without active amplifier)
 
-## Cost Breakdown
+## Software Options
 
-**DIY Receiver Option:**
-- Raspberry Pi Zero W: ~$15
-- RTL-SDR dongle: ~$30
-- Antenna: ~$25 (or DIY for ~$5)
-- SD card: ~$8
-- Power supply: ~$8
-- **Total: ~$85**
+Several pre-configured images are available for Raspberry Pi:
 
-**No-Hardware Option:**
-- RealADSB app: $4.99 (one-time purchase)
-- Use public feeds or Airplanes.live API
-- **Total: ~$5**
+### PiAware (FlightAware)
+- Most popular option
+- Well-documented with active community
+- Includes dump1090 decoder (provides data on port 30005)
+- Web interface at `http://[pi-ip]:8080`
+- Shares data with FlightAware community
 
-## Troubleshooting
+### Stratux
+- Originally designed for pilots and EFB apps
+- Provides SBS-1 format on port 30003
+- Web UI at `http://192.168.10.1`
+- Good for portable setups
 
-**App won't connect:**
-- Verify Pi is on same network as Apple TV
-- Check firewall settings
-- Ensure dump1090 is running: `ps aux | grep dump1090`
-- Try port 30003 instead of 30005
+### ADS-B Exchange
+- Community-focused, open data philosophy
+- Good for supporting unfiltered flight data
+- Active development community
 
-**No aircraft showing:**
-- Verify antenna connection
-- Check antenna placement
-- May take 5-10 minutes for first aircraft
-- Rural areas have less traffic
+### Standalone dump1090
+- Minimal installation
+- Just the decoder, no extras
+- Good for custom integrations
 
-**Slow performance:**
-- Use adsb_hub3 to filter data
-- Reduce refresh rate
-- Check network congestion
+## Setup Steps
 
-## Resources
-
-- RealADSB official site: http://www.realadsb.com
-- Developer contact: admin@realadsb.com
-- FlightAware PiAware: https://flightaware.com/adsb/piaware/
-- RTL-SDR Blog: https://www.rtl-sdr.com/
-- Reddit r/RTLSDR community
+1. **Flash SD card** with chosen image (use Etcher or Raspberry Pi Imager)
+2. **Connect hardware**: Insert SD card, attach RTL-SDR dongle and antenna
+3. **Boot Raspberry Pi** and wait for startup (~2 minutes)
+4. **Find Pi's IP address**:
+   - Check your router's connected devices, or
+   - Use network scanner tool
+5. **Verify data feed** in web browser:
+   - PiAware: `http://[pi-ip]:8080`
+   - Stratux: `http://192.168.10.1`
+6. **Access data streams**:
+   - Beast format: `[pi-ip]:30005`
+   - SBS-1 format: `[pi-ip]:30003`
 
 ## Technical Details
 
-**ADS-B Frequency:** 1090 MHz  
-**Typical Range:** 100-250 miles (line of sight)  
-**Data Formats Supported:**
+**ADS-B Frequency**: 1090 MHz  
+**Typical Range**: 100-250 miles (line of sight)  
+**Data Output Formats**:
 - Beast (port 30005)
 - SBS-1 BaseStation (port 30003)
-- adsb_hub3 custom format
 
-**App Requirements:**
-- Apple TV (tvOS)
-- iOS/iPadOS 14.0+
-- macOS (Apple Silicon or Intel)
+**What limits range:**
+- Antenna height and placement
+- Antenna quality
+- RF interference
+- Terrain and obstructions
+- Aircraft altitude (higher planes = longer range)
+
+## Advanced: adsb_hub3
+
+For advanced users, adsb_hub3 is a Java application that provides:
+- Aggregation of multiple data sources
+- Data filtering and compression
+- Bonjour auto-discovery on local network
+- API integrations (OpenSky, ADS-B Exchange)
+
+Download from: http://www.realadsb.com
+
+## Indoor Reception at MSP
+
+**Special note for Minneapolis area (3 miles from MSP airport):**
+
+An indoor setup near a window on an upper floor should provide excellent results:
+- Strong signals from aircraft on approach/departure to MSP
+- Low-altitude traffic clearly visible
+- 50-100+ mile range typical for indoor setups
+- You'll see planes banking, descending, lining up for landing
+- Even north-facing windows work well at this proximity
+
+## Troubleshooting
+
+**No aircraft showing:**
+- Verify antenna connection is secure
+- Check antenna placement (try moving to window)
+- Wait 5-10 minutes for first detections
+- Rural areas naturally have less traffic
+- Verify dump1090 is running: `ps aux | grep dump1090`
+
+**Limited range:**
+- Try relocating antenna higher or near window
+- Check for RF interference from nearby electronics
+- Consider antenna upgrade or LNA
+- Verify antenna is 1090 MHz specific
+
+**Connection issues:**
+- Verify Pi is on same network as viewing device
+- Check firewall settings
+- Try alternative port (30003 instead of 30005)
+- Restart dump1090 service
+
+## Data Access
+
+Once your receiver is running, the data can be accessed by:
+- Any compatible viewing application
+- Web browser (built-in interfaces)
+- Custom software you develop
+- Multiple devices simultaneously
 
 ## Privacy & Data Sharing
 
-When using public feeds or services like FlightAware:
+When using services like FlightAware or ADS-B Exchange:
 - Your receiver data may be shared with the community
 - Check each service's data sharing policy
-- adsb_hub3 can be configured for private use only
+- Some software can be configured for private use only
+- You control what data leaves your network
+
+## Resources
+
+- **FlightAware PiAware**: https://flightaware.com/adsb/piaware/
+- **RTL-SDR Blog**: https://www.rtl-sdr.com/
+- **ADS-B Exchange**: https://www.adsbexchange.com/
+- **Reddit r/RTLSDR**: Active community for support and ideas
+- **FlightRadar24 Blog**: Technical articles about ADS-B
+
+## Next Steps
+
+1. Order hardware components
+2. Choose software (PiAware recommended for beginners)
+3. Set up receiver near window
+4. Monitor initial results
+5. Experiment with antenna placement
+6. Consider outdoor mounting if desired
+7. Explore data visualization options
 
 ## License
 
-This README is provided as-is for educational purposes. RealADSB is developed by Nikolay Klimchuk. Hardware and software mentioned are trademarks of their respective owners.
+This project documentation is provided as-is for educational purposes. Hardware and software mentioned are trademarks of their respective owners.
 
 ---
 
