@@ -1,6 +1,6 @@
 # MSP Aircraft Tracking Receiver
 
-A DIY ADS-B receiver project for tracking aircraft in the Minneapolis area.
+A DIY ADS-B receiver project for tracking aircraft in the central and south Minnesota, and western Wisconsin areas.
 
 ## Overview
 
