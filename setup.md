@@ -170,6 +170,44 @@ Successfully assembled the receiver with the following components:
 - Coverage adequate without outdoor antenna mounting
 - Upper floor placement beneficial for line-of-sight
 
+
+### Apple TV App Troubleshooting (Ongoing Issue)
+
+[your existing troubleshooting content]
+
+**Developer Response (December 13, 2025):**
+
+Received response from N_kolay Klimch_k (RealADSB Support Team) with troubleshooting suggestions:
+
+**Developer's working setup:**
+- Raspberry Pi 5 with PiAware
+- Connection: `192.168.1.216:30003`
+- Successfully displaying traffic on Apple TV
+
+**Potential issues to investigate:**
+
+1. **Network segmentation:** Pi on 2.4GHz WiFi, Apple TV on 5GHz
+   - Both devices must be on same WiFi network/band
+   - Check router settings for device connections
+
+2. **Verify dump1090 configuration:**
+   - SSH command to check: `ps -aux | grep 1090`
+   - Should show `—net-sbs-port 30003` in parameters
+   - Confirms SBS-1 feed is available
+
+3. **Port 30003 limitations:**
+   - Lacks MLAT (multilateration) traffic
+   - Only shows direct ADS-B reception
+   - Developer suggests adsb_hub for combined feed<img width="1280" height="89" alt="images:screenshot-from-dev" src="https://github.com/user-attachments/assets/d9d3be93-a471-46a6-882c-e9a1bfb028d4" />
+
+
+**Next steps to try:**
+- [ ] Verify both devices on same WiFi network
+- [ ] Enable SSH and run diagnostic command
+- [ ] Consider installing adsb_hub for port 4567 combined feed
+
+**Status:** Awaiting SSH access to run diagnostics
+
 ---
 
-*Updated: December 12, 2024 - Initial hardware setup and troubleshooting*
+*Updated: December 12, 2025 - Initial hardware setup and troubleshooting*
