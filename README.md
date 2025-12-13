@@ -1,184 +1,257 @@
 # MSP Aircraft Tracking Receiver
 
-A DIY ADS-B receiver project for tracking aircraft in the central and south Minnesota, and western Wisconsin areas.
+Working ADS-B receiver tracking aircraft over central and south Minnesota and western Wisconsin.
 
-## Overview
+![MSP Reception Map](images/map.png)
+*Live aircraft tracking via web interface*
 
-This project involves building your own ADS-B (Automatic Dependent Surveillance-Broadcast) receiver to track aircraft in real-time. Aircraft broadcast their position, altitude, speed, and other data on 1090 MHz, which you can receive directly with inexpensive hardware.
+## Project Status: Operational
 
-**What you'll see:**
-- Commercial, private, and military aircraft within 100-250 miles
-- Real-time position, altitude, speed, heading, callsign
-- Aircraft registration, type, origin/destination information
-- Typical range: 100-250 miles line-of-sight
+This receiver is actively tracking aircraft and sharing data with the FlightAware network. The system runs 24/7, capturing position, altitude, speed, and identification data from aircraft broadcasting on 1090 MHz.
 
-## Hardware Required
+![FlightAware Dashboard](images/dashboard.png)
+*Data history interface*
 
-### Basic Setup (~$75-85)
+## Current Setup
 
-- **Raspberry Pi Zero W**: ~$15 (any Pi model with USB works)
-- **RTL-SDR USB dongle**: ~$30
-  - RTL-SDR Blog V3 (recommended)
-  - NooElec NESDR Smart
-  - FlightAware Pro Stick
-- **ADS-B antenna (1090 MHz)**: ~$20-25
-  - Commercial magnetic mount antenna, or
-  - DIY cantenna/spider antenna (nearly free)
-- **MicroSD card**: ~$8 (16GB minimum)
-- **USB power supply**: ~$8 (or use existing phone charger)
+**Location:** Highland Park, St. Paul, MN (3 miles from MSP airport)
 
-**Total: ~$75-85**
+**Hardware:**
+- Raspberry Pi Zero 2 W
+- RTL-SDR Blog V3 dongle
+- 1090 MHz ADS-B antenna
+- 8GB microSD card
+- Indoor placement, upper floor, north-facing window
 
-### Optional Upgrades
+**Software:**
+- PiAware 10.0 (FlightAware's receiver software)
+- dump1090-fa (ADS-B decoder)
+- SkyAware web interface
+- Automatic FlightAware data sharing
 
-- LNA (Low Noise Amplifier) for better range
-- Quality coaxial cable if antenna is remote mounted
-- Bandpass filter to reduce interference
-- Weatherproof enclosure for outdoor mounting
+**Access:**
+- Web interface: `http://piaware.local:8080`
+- Data streams: ports 30005 (Beast) and 30003 (SBS-1)
 
-## Antenna Placement
+## Reception Range
 
-### Indoor Setup
-- Near a window (upper floors work best)
-- Away from electronics and USB chargers (minimize interference)
-- Vertical orientation preferred
-- South-facing windows ideal (Northern Hemisphere - most traffic routes)
-- Magnetic base antennas work well on metal surfaces (filing cabinets, shelves)
+**Observed Coverage (Indoor Setup):**
+- North: ~25 miles (Ramsey)
+- South: ~15 miles (Rosemount)
+- East: ~35 miles (River Falls, WI)
+- West: ~30 miles (Shakopee)
 
+**Performance Notes:**
+- Best reception to south and east (aircraft on MSP approach paths)
+- Typically tracking 3-6 aircraft simultaneously during daytime
+- Indoor placement provides adequate coverage for local traffic monitoring
+- Range limited by building structure compared to outdoor mounting
+- Upper floor location beneficial for line-of-sight reception
 
+## What It Tracks
 
-## Software Options
+**Aircraft Information Received:**
+- Real-time position (latitude/longitude)
+- Altitude (barometric and GPS)
+- Ground speed and heading
+- Vertical speed (climb/descent rate)
+- Flight number/callsign
+- Aircraft registration
+- Aircraft type and model
+- Squawk code (transponder code)
 
-Several pre-configured images are available for Raspberry Pi:
-
-### PiAware (FlightAware)
-- Most popular option
-- Well-documented with active community
-- Includes dump1090 decoder (provides data on port 30005)
-- Web interface at `http://[pi-ip]:8080`
-- Shares data with FlightAware community
-
-### Stratux
-- Originally designed for pilots and EFB apps
-- Provides SBS-1 format on port 30003
-- Web UI at `http://192.168.10.1`
-- Good for portable setups
-
-### ADS-B Exchange
-- Community-focused, open data philosophy
-- Good for supporting unfiltered flight data
-- Active development community
-
-### Standalone dump1090
-- Minimal installation
-- Just the decoder, no extras
-- Good for custom integrations
-
-## Setup Steps
-
-1. **Flash SD card** with chosen image (use Etcher or Raspberry Pi Imager)
-2. **Connect hardware**: Insert SD card, attach RTL-SDR dongle and antenna
-3. **Boot Raspberry Pi** and wait for startup (~2 minutes)
-4. **Find Pi's IP address**:
-   - Check your router's connected devices, or
-   - Use network scanner tool
-5. **Verify data feed** in web browser:
-   - PiAware: `http://[pi-ip]:8080`
-   - Stratux: `http://192.168.10.1`
-6. **Access data streams**:
-   - Beast format: `[pi-ip]:30005`
-   - SBS-1 format: `[pi-ip]:30003`
+**Typical Traffic:**
+- Commercial flights arriving/departing MSP
+- Regional jets and turboprops
+- Private general aviation aircraft
+- Cargo flights
+- Occasional military aircraft
 
 ## Technical Details
 
-**ADS-B Frequency**: 1090 MHz  
-**Typical Range**: 100-250 miles (line of sight)  
-**Data Output Formats**:
-- Beast (port 30005)
-- SBS-1 BaseStation (port 30003)
+**Reception:**
+- Frequency: 1090 MHz (ADS-B)
+- Modulation: PPM (Pulse Position Modulation)
+- Protocol: Mode S Extended Squitter
+- Update rate: ~1 second per aircraft
 
-**What limits range:**
-- Antenna height and placement
-- Antenna quality
-- RF interference
-- Terrain and obstructions
-- Aircraft altitude (higher planes = longer range)
+**Data Output:**
+- Beast format (raw binary): port 30005
+- SBS-1 BaseStation format (text): port 30003
+- Web interface: port 8080
+- FlightAware feed: automatic background upload
 
-## Advanced: adsb_hub3
+**System Performance:**
+- CPU usage: ~9% (Raspberry Pi Zero 2 W)
+- Memory usage: Minimal (~200MB)
+- Power consumption: ~2.5W
+- Network bandwidth: ~1-2 Mbps sustained
+- Uptime: Continuous (restarts only for updates)
 
-For advanced users, adsb_hub3 is a Java application that provides:
-- Aggregation of multiple data sources
-- Data filtering and compression
-- Bonjour auto-discovery on local network
-- API integrations (OpenSky, ADS-B Exchange)
+## Data Sharing
 
-Download from: http://www.realadsb.com
+**FlightAware Integration:**
+- Receiver automatically shares data with FlightAware network
+- Contributes to global aircraft tracking coverage
+- Provides multilateration (MLAT) support when synchronized
+- Free Enterprise account benefits for data contributors
 
-## Indoor Reception at MSP
+**Access to Data:**
+- FlightAware statistics: https://www.flightaware.com/adsb/stats
+- Live coverage map shows areas this receiver monitors
+- Historical statistics track uptime and aircraft detected
 
-**Special note for Minneapolis area (3 miles from MSP airport):**
+## Viewing Options
 
-An indoor setup near a window on an upper floor should provide excellent results:
-- Strong signals from aircraft on approach/departure to MSP
-- Low-altitude traffic clearly visible
-- 50-100+ mile range typical for indoor setups
-- You'll see planes banking, descending, lining up for landing
-- Even north-facing windows work well at this proximity
+**Built-in Web Interface (SkyAware):**
+- Interactive map with real-time aircraft positions
+- Aircraft list with detailed information
+- Signal strength graphs
+- Range/altitude plots
+- MLAT status indicators
 
-## Troubleshooting
+**Compatible Applications:**
+- Any ADS-B viewer supporting Beast or SBS-1 formats
+- Custom applications via data stream ports
+- FlightAware website for worldwide coverage view
 
-**No aircraft showing:**
-- Verify antenna connection is secure
-- Check antenna placement (try moving to window)
-- Wait 5-10 minutes for first detections
-- Rural areas naturally have less traffic
-- Verify dump1090 is running: `ps aux | grep dump1090`
+**Attempted Integrations:**
+- RealADSB Apple TV app: Connection issues (under investigation)
+- Web browser access: Working perfectly on all devices
 
-**Limited range:**
-- Try relocating antenna higher or near window
-- Check for RF interference from nearby electronics
-- Consider antenna upgrade or LNA
-- Verify antenna is 1090 MHz specific
+## Project Cost
 
-**Connection issues:**
-- Verify Pi is on same network as viewing device
-- Check firewall settings
-- Try alternative port (30003 instead of 30005)
-- Restart dump1090 service
+**Hardware Investment:**
+- Raspberry Pi Zero 2 W: $15
+- RTL-SDR Blog V3: $30
+- ADS-B antenna: $25
+- MicroSD card (8GB): $8
+- Power supply: $8
+- Micro-USB OTG adapter: $6
 
-## Data Access
+**Total: ~$92**
 
-Once your receiver is running, the data can be accessed by:
-- Any compatible viewing application
-- Web browser (built-in interfaces)
-- Custom software you develop
-- Multiple devices simultaneously
+**Ongoing Costs:** None (electricity negligible at ~2.5W)
 
-## Privacy & Data Sharing
+## Advantages of This Setup
 
-When using services like FlightAware or ADS-B Exchange:
-- Your receiver data may be shared with the community
-- Check each service's data sharing policy
-- Some software can be configured for private use only
-- You control what data leaves your network
+**Indoor Reception:**
+- No outdoor antenna installation required
+- No weatherproofing concerns
+- Easy to relocate or adjust
+- Protected from weather damage
+- Sufficient for local traffic monitoring
 
-## Resources
+**Proximity to MSP Airport:**
+- Strong signals from low-altitude traffic
+- Clear view of approach and departure paths
+- High volume of commercial traffic
+- Interesting variety of aircraft types
 
-- **FlightAware PiAware**: https://flightaware.com/adsb/piaware/
-- **RTL-SDR Blog**: https://www.rtl-sdr.com/
-- **ADS-B Exchange**: https://www.adsbexchange.com/
-- **Reddit r/RTLSDR**: Active community for support and ideas
-- **FlightRadar24 Blog**: Technical articles about ADS-B
+**Self-Contained System:**
+- Runs independently (no computer required)
+- Web interface accessible from any device on network
+- Automatic updates via FlightAware
+- Low maintenance requirements
 
-## Next Steps
+## Limitations
 
-1. Order hardware components
-2. Choose software (PiAware recommended for beginners)
-3. Set up receiver near window
-4. Monitor initial results
-5. Experiment with antenna placement
-6. Consider outdoor mounting if desired
-7. Explore data visualization options
+**Indoor Placement:**
+- Reduced range compared to outdoor rooftop mounting
+- Building structure attenuates signals
+- Some blind spots due to obstructions
+- North-facing window not optimal for southern traffic
+
+**Hardware Constraints:**
+- Single frequency (1090 MHz only)
+- Cannot receive UAT 978 MHz (US general aviation)
+- Pi Zero 2 W has limited processing power for advanced features
+- No built-in GPS (MLAT requires network sync)
+
+**Coverage Gaps:**
+- Limited reception of distant high-altitude traffic
+- Terrain blocking in some directions
+- Metal/concrete building interference
+- Cannot track aircraft with transponders off
+
+## Future Enhancements
+
+**Potential Improvements:**
+- Outdoor antenna mounting for extended range
+- LNA (Low Noise Amplifier) for better sensitivity
+- Bandpass filter to reduce interference
+- Second receiver for 978 MHz UAT reception
+- Custom web interface with additional features
+- Integration with weather satellite receiver project
+
+**Not Planned:**
+- Commercial grade equipment (unnecessary for hobbyist use)
+- Multiple antenna array (diminishing returns)
+- Professional installation (DIY approach working well)
+
+## Build Documentation
+
+**For detailed build instructions, see:**
+- [setup.md](setup.md) - Complete setup log with troubleshooting
+- Hardware assembly process
+- SD card flashing steps (Balena Etcher recommended)
+- WiFi configuration procedure
+- First boot sequence
+- Apple TV app connection attempts
+
+**Key Lessons Learned:**
+- Balena Etcher more reliable than Raspberry Pi Imager for macOS
+- Indoor placement viable for local traffic monitoring
+- FlightAware PiAware software works out-of-box
+- Proximity to major airport provides excellent coverage despite indoor setup
+- Web interface sufficient for monitoring (dedicated apps optional)
+
+## Related Projects
+
+**Weather Satellite Reception:**
+- Separate receiver planned for NOAA and Meteor-M satellites
+- Will use different antenna (137 MHz vs 1090 MHz)
+- Complementary project using similar RTL-SDR technology
+- See: [weather-satellite-reception](https://github.com/dgbenner/weather-satellite-reception)
+
+**Hybrid Flight Tracker:**
+- Custom web application combining local receiver data
+- Integration with Airplanes.live API for global coverage
+- Future development project
+- See: [minneapolis-flight-tracker](https://github.com/dgbenner/minneapolis-flight-tracker)
+
+## Resources Used
+
+**Software:**
+- PiAware: https://flightaware.com/adsb/piaware/
+- Balena Etcher: https://etcher.balena.io/
+- Raspberry Pi OS (embedded in PiAware image)
+
+**Hardware:**
+- RTL-SDR Blog: https://www.rtl-sdr.com/
+- Raspberry Pi Foundation: https://www.raspberrypi.com/
+
+**Community:**
+- FlightAware Forums: https://discussions.flightaware.com/
+- Reddit r/RTLSDR: https://reddit.com/r/RTLSDR
+- RTL-SDR Blog tutorials and guides
+
+## Troubleshooting Reference
+
+**Common Issues Encountered:**
+- macOS mounting errors with PiAware SD card image (expected behavior)
+- Apple TV app connection problems (ongoing investigation)
+- Network discovery using hostname vs IP address
+
+**Solutions Applied:**
+- Used Balena Etcher instead of Raspberry Pi Imager
+- Accessed web interface via browser instead of dedicated app
+- Used `ping piaware.local` to discover IP addresses
+
+**System Monitoring:**
+- Check status: `http://piaware.local/`
+- View logs: SSH access or FlightAware stats page
+- Verify operation: Aircraft should appear within 5-10 minutes
 
 ## License
 
@@ -186,4 +259,5 @@ This project documentation is provided as-is for educational purposes. Hardware 
 
 ---
 
-*Last updated: November 2024*
+*Project completed: December 12, 2025*  
+*Last updated: December 13, 2025*
