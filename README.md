@@ -39,7 +39,7 @@ This receiver is actively tracking aircraft and sharing data with the FlightAwar
 - North: ~25 miles (Ramsey)
 - South: ~15 miles (Rosemount)
 - East: ~35 miles (River Falls, WI)
-- West: ~30 miles (Shakopee)
+- West: ~45 miles (Waconia)
 
 **Performance Notes:**
 - Best reception to south and east (aircraft on MSP approach paths)
