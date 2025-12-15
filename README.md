@@ -36,7 +36,7 @@ This receiver is actively tracking aircraft and sharing data with the FlightAwar
 ## Reception Range
 
 **Observed Coverage (Indoor Setup):**
-- North: ~25 miles (Ramsey)
+- North: ~55 miles (Monticello)
 - South: ~15 miles (Rosemount)
 - East: ~35 miles (River Falls, WI)
 - West: ~45 miles (Waconia)
