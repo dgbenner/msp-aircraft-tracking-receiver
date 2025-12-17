@@ -14,7 +14,7 @@ This receiver is actively tracking aircraft and sharing data with the FlightAwar
 
 ## Current Setup
 
-**Location:** Highland Park, St. Paul, MN (3 miles from MSP airport)
+**Location:** Highland Park, St. Paul, MN (2 miles from MSP airport)
 
 **Hardware:**
 - Raspberry Pi Zero 2 W
